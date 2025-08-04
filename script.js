@@ -33,21 +33,24 @@ async function lookupDistrict() {
     const { x, y } = geocodeData.candidates[0].location;
     console.log(`Coordinates for ${formattedAddress}: x=${x}, y=${y}`);
 
-    // Encode geometry as JSON and URL-encode it
-    const geometry = encodeURIComponent(JSON.stringify({ x: x, y: y }));
+    const districtUrl = 'https://services2.arcgis.com/zNjnZafDYCAJAbN0/ArcGIS/rest/services/City_Council_Districts_view/FeatureServer/query';
 
-    const districtUrl = `https://services2.arcgis.com/zNjnZafDYCAJAbN0/ArcGIS/rest/services/City_Council_Districts_view/FeatureServer/query` +
-      `?f=json` +
-      `&geometry=${geometry}` +
-      `&geometryType=esriGeometryPoint` +
-      `&inSR=4326` +
-      `&spatialRel=esriSpatialRelIntersects` +
-      `&outFields=*` +
-      `&returnGeometry=false`;
+    const districtRes = await fetch(districtUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        f: 'json',
+        geometry: JSON.stringify({ x: x, y: y }),
+        geometryType: 'esriGeometryPoint',
+        inSR: '4326',
+        spatialRel: 'esriSpatialRelIntersects',
+        outFields: '*',
+        returnGeometry: 'false'
+      })
+    });
 
-    console.log('District Query URL:', districtUrl);
-
-    const districtRes = await fetch(districtUrl);
     const districtData = await districtRes.json();
     console.log('District Response:', districtData);
 
