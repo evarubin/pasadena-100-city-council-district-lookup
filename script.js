@@ -33,8 +33,9 @@ async function lookupDistrict() {
     const { x, y } = geocodeData.candidates[0].location;
     console.log(`Coordinates for ${formattedAddress}: x=${x}, y=${y}`);
 
+    const geometryParam = encodeURIComponent(`${x},${y}`);
     const districtUrl = `https://services.arcgis.com/peir6zCCgZW6bVZP/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query` +
-      `?f=json&geometry=${x},${y}` +
+      `?f=json&geometry=${geometryParam}` +
       `&geometryType=esriGeometryPoint` +
       `&inSR=4326` +
       `&spatialRel=esriSpatialRelIntersects` +
