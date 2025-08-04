@@ -1,16 +1,25 @@
 async function lookupDistrict() {
-  const address = document.getElementById('address').value;
+  const rawAddress = document.getElementById('address').value;
   const resultDiv = document.getElementById('result');
 
-  if (!address) {
+  if (!rawAddress) {
     resultDiv.innerHTML = '<strong>Please enter an address.</strong>';
     return;
+  }
+
+  // Reformat address if missing commas
+  let formattedAddress = rawAddress.trim();
+  if (!formattedAddress.includes(',')) {
+    const parts = formattedAddress.split(/\s+/);
+    if (parts.length >= 5) {
+      formattedAddress = `${parts.slice(0, -3).join(' ')}, ${parts.slice(-3, -2).join(' ')}, ${parts.slice(-2).join(' ')}`;
+    }
   }
 
   resultDiv.innerHTML = '📍 Looking up your district...';
 
   try {
-    const geocodeUrl = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=${encodeURIComponent(address)}&f=json&outFields=*&maxLocations=1`;
+    const geocodeUrl = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=${encodeURIComponent(formattedAddress)}&f=json&outFields=*&maxLocations=1`;
     console.log('Geocode URL:', geocodeUrl);
 
     const geocodeRes = await fetch(geocodeUrl);
@@ -22,7 +31,7 @@ async function lookupDistrict() {
     }
 
     const { x, y } = geocodeData.candidates[0].location;
-    console.log(`Coordinates for ${address}: x=${x}, y=${y}`);
+    console.log(`Coordinates for ${formattedAddress}: x=${x}, y=${y}`);
 
     // Add a small buffer to create an envelope around the point
     const buffer = 0.0001;
