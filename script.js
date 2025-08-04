@@ -35,7 +35,7 @@ async function lookupDistrict() {
 
     const districtUrl = `https://services.arcgis.com/peir6zCCgZW6bVZP/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query` +
       `?f=json` +
-      `&geometry=${encodeURIComponent(JSON.stringify({ x, y }))}` +
+      `&geometry=${x},${y}` +
       `&geometryType=esriGeometryPoint` +
       `&inSR=4326` +
       `&spatialRel=esriSpatialRelIntersects` +
