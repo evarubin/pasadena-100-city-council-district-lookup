@@ -3,87 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pasadena City Council District Lookup</title>
+  <title>Pasadena 100 Council District Lookup</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      max-width: 600px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background-color: #f3f3f3;
+      color: #333;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    header img {
+      width: 60px;
     }
     h1 {
-      color: #2e6da4;
+      color: #0064a4;
+      font-size: 1.8rem;
+      margin: 0;
     }
     input, button {
-      padding: 0.5rem;
+      padding: 0.75rem;
       margin-top: 0.5rem;
       width: 100%;
       box-sizing: border-box;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #0064a4;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #004d80;
     }
     #result {
       margin-top: 1rem;
       padding: 1rem;
-      border: 1px solid #ccc;
-      background-color: #f9f9f9;
+      border-left: 4px solid #0064a4;
+      background-color: #eef6fc;
+    }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <h1>Find Your Pasadena City Council District</h1>
-  <p>Enter your full Pasadena address below (e.g., 100 N Garfield Ave, Pasadena, CA 91101):</p>
-  <input type="text" id="address" placeholder="Your full address" />
-  <button onclick="lookupDistrict()">Look Up District</button>
+  <div class="container">
+    <header>
+      <img src="https://evarubin.github.io/pasadena-100-city-council-district-lookup/pasadena100-logo.png" alt="Pasadena 100 logo">
+      <h1>Find Your Pasadena City Council District</h1>
+    </header>
 
-  <div id="result"></div>
+    <p>Enter your full Pasadena address below (e.g., <em>100 N Garfield Ave, Pasadena, CA 91101</em>):</p>
+    <input type="text" id="address" placeholder="Your full address" />
+    <button onclick="lookupDistrict()">Look Up District</button>
 
-  <script>
-  async function lookupDistrict() {
-    const address = document.getElementById('address').value;
-    const resultDiv = document.getElementById('result');
+    <div id="result"></div>
 
-    if (!address) {
-      resultDiv.innerHTML = '<strong>Please enter an address.</strong>';
-      return;
-    }
+    <footer>
+      Powered by Pasadena 100 · Advocating for 100% Carbon-Free Energy by 2030
+    </footer>
+  </div>
 
-    resultDiv.innerHTML = '📍 Looking up your district...';
-
-    try {
-      const geocodeUrl = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=${encodeURIComponent(address)}&f=json&outFields=*&maxLocations=1`;
-      console.log('Geocode URL:', geocodeUrl);
-      
-      const geocodeRes = await fetch(geocodeUrl);
-      const geocodeData = await geocodeRes.json();
-
-      if (!geocodeData.candidates || geocodeData.candidates.length === 0) {
-        resultDiv.innerHTML = '<strong>Address not found. Please check and try again.</strong>';
-        return;
-      }
-
-      const { x, y } = geocodeData.candidates[0].location;
-      console.log('Coordinates:', x, y);
-
-      const districtUrl = `https://services.arcgis.com/peir6zCCgZW6bVZP/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?geometry=${x},${y}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=false&f=json`;
-      console.log('District Query URL:', districtUrl);
-
-      const districtRes = await fetch(districtUrl);
-      const districtData = await districtRes.json();
-
-      if (!districtData.features || districtData.features.length === 0) {
-        resultDiv.innerHTML = '<strong>Could not find a district for this location.</strong>';
-        return;
-      }
-
-      const attributes = districtData.features[0].attributes;
-      const district = attributes.DISTRICT || 'Unknown';
-      const member = attributes.MEMBER || 'your council representative';
-
-      resultDiv.innerHTML = `<strong>✅ You are in Pasadena City Council District ${district}</strong><br /><br />Councilmember: ${member}`;
-    } catch (error) {
-      console.error('Error during lookup:', error);
-      resultDiv.innerHTML = '<strong>Something went wrong. Please try again later.</strong>';
-    }
-  }
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
