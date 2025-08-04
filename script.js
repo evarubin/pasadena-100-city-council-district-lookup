@@ -36,7 +36,7 @@ async function lookupDistrict() {
     // Round coordinates to 6 decimals
     const geometry = `${x.toFixed(6)},${y.toFixed(6)}`;
 
-    const districtUrl = `https://services.arcgis.com/peir6zCCgZW6bVZP/ArcGIS/rest/services/City_Council_Districts/FeatureServer/0/query` +
+    const districtUrl = `https://services2.arcgis.com/zNjnZafDYCAJAbN0/ArcGIS/rest/services/City_Council_Districts_view/FeatureServer/query` +
       `?f=json` +
       `&geometry=${geometry}` +
       `&geometryType=esriGeometryPoint` +
