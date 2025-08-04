@@ -33,15 +33,7 @@ async function lookupDistrict() {
     const { x, y } = geocodeData.candidates[0].location;
     console.log(`Coordinates for ${formattedAddress}: x=${x}, y=${y}`);
 
-    // Add a small buffer to create an envelope around the point
-    const buffer = 0.0001;
-    const xmin = x - buffer;
-    const xmax = x + buffer;
-    const ymin = y - buffer;
-    const ymax = y + buffer;
-
-    const envelope = encodeURIComponent(JSON.stringify({ xmin, ymin, xmax, ymax }));
-    const districtUrl = `https://services.arcgis.com/peir6zCCgZW6bVZP/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?geometry=${envelope}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=false&f=json`;
+    const districtUrl = `https://services.arcgis.com/peir6zCCgZW6bVZP/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?geometry=${x},${y}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=false&f=json`;
     console.log('District Query URL:', districtUrl);
 
     const districtRes = await fetch(districtUrl);
