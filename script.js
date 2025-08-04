@@ -33,8 +33,8 @@ async function lookupDistrict() {
     const { x, y } = geocodeData.candidates[0].location;
     console.log(`Coordinates for ${formattedAddress}: x=${x}, y=${y}`);
 
-    // Round coordinates to 6 decimals
-    const geometry = `${x.toFixed(6)},${y.toFixed(6)}`;
+    // Encode geometry as JSON and URL-encode it
+    const geometry = encodeURIComponent(JSON.stringify({ x: x, y: y }));
 
     const districtUrl = `https://services2.arcgis.com/zNjnZafDYCAJAbN0/ArcGIS/rest/services/City_Council_Districts_view/FeatureServer/query` +
       `?f=json` +
