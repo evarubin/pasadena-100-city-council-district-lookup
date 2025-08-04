@@ -42,7 +42,7 @@ async function lookupDistrict() {
       },
       body: new URLSearchParams({
         f: 'json',
-        geometry: JSON.stringify({ x: x, y: y }),
+        geometry: `${x},${y}`,
         geometryType: 'esriGeometryPoint',
         inSR: '4326',
         spatialRel: 'esriSpatialRelIntersects',
@@ -69,3 +69,4 @@ async function lookupDistrict() {
     resultDiv.innerHTML = '<strong>Something went wrong. Please try again later.</strong>';
   }
 }
+
